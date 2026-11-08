@@ -1,0 +1,22 @@
+name: 补充省钱经验
+description: 提供可复用的本地经验或公共资源
+title: "[补充] "
+body:
+  - type: input
+    id: city
+    attributes:
+      label: 城市及区县
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: 内容、适用条件与采样时间
+      description: 请说明花费、时间成本、风险与办理入口，区分个人经验和政策规定。
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: 参考来源
+      description: 不要包含推广码、返佣链接或他人的个人信息。

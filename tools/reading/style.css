@@ -1,0 +1,11 @@
+body {font-family: sans-serif; line-height: 1.8; margin: 1em; color: #24382e; overflow-wrap: break-word;}
+h1,h2,h3 {line-height: 1.45; break-after: avoid;}
+h1 {font-size: 1.8em; margin-top: 1.2em;}
+h2 {font-size: 1.3em; margin-top: 1.5em;}
+h3 {font-size: 1.1em;}
+a {color: #285c42;}
+blockquote {margin: 1em 0; padding-left: 1em; border-left: 3px solid #b4bcae; font-size: .85em;}
+table {border-collapse: collapse; width: 100%; font-size: .8em; line-height: 1.6; margin: 1em 0;}
+th,td {text-align: left; vertical-align: top; padding: .5em; border: 1px solid #cdd3c6;}
+th {background: #edf1e8;}
+ul,ol {padding-left: 1.5em;}

@@ -1,0 +1,31 @@
+name: 内容纠错或政策更新
+description: 报告错误、政策变更或失效链接
+title: "[纠错] "
+body:
+  - type: input
+    id: location
+    attributes:
+      label: 对应章节与小节
+      placeholder: 例如：第一章 1.6
+    validations:
+      required: true
+  - type: input
+    id: scope
+    attributes:
+      label: 城市、适用人群与时间
+      placeholder: 例如：上海、在职职工、2026 年 11 月
+    validations:
+      required: true
+  - type: textarea
+    id: correction
+    attributes:
+      label: 原文问题与建议修改
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: 来源或复现步骤
+      description: 政策请优先提供主管部门原文链接；计算问题请列出公式与假设。请勿提交身份证、电话等个人信息。
+    validations:
+      required: true

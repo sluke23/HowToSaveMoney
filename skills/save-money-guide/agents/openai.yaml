@@ -1,0 +1,4 @@
+interface:
+  display_name: "一线城市省钱指南"
+  short_description: "按城市与生活场景查阅省钱指南，核算费用、时间和政策条件，逐条注明出处"
+  default_prompt: "使用 $save-money-guide，结合我的城市和主要开支，找出最值得先做的省钱动作，并注明章节出处。"
