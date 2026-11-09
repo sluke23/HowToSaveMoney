@@ -1,24 +1,66 @@
-<div align="center">
+# 给 Claude Code / Codex 装一个会算账的省钱大脑
 
-# 一线城市省钱指南
+**问一句「住远点划算吗」，让它把房租、交通费、通勤时间排成对比表。**
 
-**一份给普通打工人的成本结构说明书**
+## 一键安装
 
-作者：**毛毛&luke**
+按你使用的工具选择一条命令即可（macOS / Linux / Git Bash，需要 Git；在没有 `HowToSaveMoney` 同名目录的位置执行）。已有同名 Skill 时先备份，避免覆盖自己的修改。
 
-北京 · 上海 · 广州 · 深圳
+### Claude Code
 
-降低单位体验成本，把钱、时间和精力留给值得的事。
+```bash
+git clone https://github.com/sluke23/HowToSaveMoney.git && mkdir -p "$HOME/.claude/skills" && cp -R HowToSaveMoney/skills/save-money-guide "$HOME/.claude/skills/"
+```
 
-**17 章 · 94 节 · 3 个附录 · v1.0（2026 年 10 月）**
+安装后打开新会话，用 `/save-money-guide` 调用。
 
-[开始阅读](book/00-这本书怎么用.md) · [按问题查阅](#按问题查阅) · [完整目录](#目录) · [省钱日历](docs/附录A-一年省钱日历.md)
+### Codex
 
-[静态阅读与检索页](index.html) · [AI 查阅 Skill](docs/使用省钱指南Skill.md) · [EPUB / PDF 等阅读格式](tools/README.md) · [参与完善](CONTRIBUTING.md)
+```bash
+git clone https://github.com/sluke23/HowToSaveMoney.git && mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills" && cp -R HowToSaveMoney/skills/save-money-guide "${CODEX_HOME:-$HOME/.codex}/skills/"
+```
 
-</div>
+安装后打开新会话，用 `$save-money-guide` 调用。
 
----
+仓库已下载，或需要 WorkBuddy / Windows 安装方法，见[完整安装说明](docs/使用省钱指南Skill.md#安装)。
+
+## 对话示例
+
+安装后打开新会话，复制下面的问题：
+
+```text
+使用 $save-money-guide。住远点划算吗？
+我在上海，到手月薪 10000 元，每月上班 22 天：
+A：月租 4500，单程通勤 30 分钟，交通费每月 200；
+B：月租 3500，单程通勤 60 分钟，交通费每月 300。
+请给费用与时间对比表、每年能少花多少钱，以及什么情况下该选 A。
+```
+
+Claude Code 将 `$save-money-guide` 换为 `/save-money-guide`。
+
+<p align="center">
+  <a href="docs/images/skill-rent-comparison.png">
+    <img src="docs/images/skill-rent-comparison.png" alt="Codex 使用省钱指南 Skill 比较房租与通勤的真实对话截图" width="420">
+  </a>
+</p>
+
+*Codex 实际对话截图，点击查看原图。具体回答随模型与输入而变化。*
+
+| 你问 | 它帮你做什么 |
+| --- | --- |
+| 住远点划算吗？ | 对比现金支出与通勤投入，算出买回一小时的价格 |
+| 每月存不下钱，先改哪三笔？ | 按固定支出、时间成本与执行条件排优先级 |
+| 我在深圳，有哪些待遇值得查？ | 列出需核对条件的事项、章节出处和官方入口，区分补贴、退税与账户提取 |
+
+Skill 内置《一线城市省钱指南》的 **17 章、94 节、3 个附录和待核实清单**，按问题读取相关资料，给出可复算的比较与章节出处。支持北京、上海、广州、深圳；资料基线为 2026 年 10 月，当前政策需另查官方规则。文件可离线查阅；运行它仍需要支持 Skill 的 AI 助手。
+
+作者：**毛毛&luke**。正文与工具内容继续遵循[原有混合许可](LICENSE)。
+
+[安装与使用](docs/使用省钱指南Skill.md) · [查看 Skill](skills/save-money-guide/SKILL.md) · [在线阅读与时薪计算器](https://sluke23.github.io/HowToSaveMoney/) · [完整目录](#目录)
+
+## 也可以直接读指南
+
+[开始阅读](book/00-这本书怎么用.md) · [按问题查阅](#按问题查阅) · [静态阅读页](index.html) · [EPUB / PDF 等阅读格式](tools/README.md) · [参与完善](CONTRIBUTING.md)
 
 ## 这份指南想做什么
 
@@ -51,12 +93,6 @@
 | 北上广深各有什么特别的省钱办法？ | [北京](book/09-北京.md) · [上海](book/10-上海.md) · [广州](book/11-广州.md) · [深圳](book/12-深圳.md) |
 | 押金、预付卡、借贷和副业，怎么避免亏一大笔？ | [防守](book/13-防守.md) |
 | 买房、买车、孩子上学和储蓄，该先算什么？ | [买房](book/14-买房.md) · [买车](book/15-买车.md) · [孩子上学](book/16-孩子上学.md) · [理财](book/17-理财.md) |
-
-## 让 AI 按书回答
-
-仓库提供 [save-money-guide Skill](skills/save-money-guide/SKILL.md)，内置正文、附录和待核实清单，可安装到 Codex、Claude Code 或 WorkBuddy，具体安装方法见[使用说明](docs/使用省钱指南Skill.md)。它会按城市与问题查找章节、计算费用与时间成本，并注明出处；当前政策需要另查官方规则。
-
-例如：“使用 `$save-money-guide`，帮我比较住远一点能省多少房租、会多花多少通勤时间。”完整安装方法见 [使用省钱指南 Skill](docs/使用省钱指南Skill.md)。
 
 ## 三条原则
 
