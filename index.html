@@ -11,11 +11,40 @@
 @media(max-width:900px){.shell{padding:0 24px}.layout{grid-template-columns:1fr;gap:20px}.sidebar{position:static;max-height:none;padding:0}.sidebar nav{max-height:240px;overflow:auto}.hero{padding-top:38px}.controls{padding-top:12px}.chapter-head h2{font-size:24px}select{flex:1;max-width:none}html{scroll-padding-top:225px}}
 @media(max-width:480px){.shell{padding:0 18px}.top .shell{align-items:flex-start;padding-top:14px;padding-bottom:14px;flex-direction:column;gap:5px}.top nav{gap:17px}.hero{padding-top:30px}.subtitle{font-size:18px}.lede{font-size:14px}.filters{gap:8px}input{width:100%;flex-basis:100%}select{width:40%;font-size:12px;padding:8px}.entry{font-size:15px}.chapter-head h2{font-size:22px}.entry h2{font-size:19px}.back{right:12px;bottom:12px}}
 @media print{.top,.controls,.sidebar,.back{display:none}.layout{display:block}.shell{padding:0}article{break-before:page}.entry{break-inside:auto}body{background:white}}
+
+.calculator{margin-bottom:38px;padding:26px;border:1px solid var(--line);border-radius:12px;background:var(--soft)}.calculator h2{margin:0;font-size:25px}.calc-fields,.calc-results{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin:18px 0}.calc-fields label{display:flex;flex-direction:column;font-size:14px;gap:5px}.calc-fields input,.calc-fields select{width:100%;min-width:0;max-width:none;box-sizing:border-box}.calc-results>div{background:var(--paper);padding:15px;border-radius:8px}.calc-results dt{font-size:13px;color:var(--muted)}.calc-results dd{margin:4px 0 0;font-size:25px;font-weight:700}.calc-note{font-size:13px;color:var(--muted)}.calculator summary{cursor:pointer}.calculator li{margin:12px 0}.calc-error{color:#983827}
 </style>
 </head>
 <body id="top">
 <div class="top"><div class="shell"><a class="brand" href="#top">HOW TO SAVE MONEY</a><nav aria-label="项目链接"><a href="README.md">项目说明</a><a href="tools/README.md">EPUB / PDF 等阅读格式 ↗</a><a href="CONTRIBUTING.md">参与完善</a></nav></div></div>
 <div class="shell"><header class="hero"><div class="eyebrow">A FIELD GUIDE TO LIVING CHEAPLY</div><h1>一线城市省钱指南</h1><p class="subtitle">一份给普通打工人的成本结构说明书</p><p class="meta">作者：毛毛&amp;luke</p><p class="lede">先算房租与通勤，再看吃饭与日常。把公共资源用起来，把不该交的钱留下来。按你现在遇到的问题，挑一两件开始。</p><div class="cities" aria-label="适用城市"><span>北京</span><span>上海</span><span>广州</span><span>深圳</span></div><p class="meta">17 章 / 94 节 / 3 个附录 · 原文 v1.0，2026 年 10 月<br>政策与金额沿用原文；办理前请核对主管部门最新公告。<a href="docs/待核实清单.md">查看待核实清单</a></p></header></div>
+
+<div class="shell"><section class="calculator" id="wage-calculator" aria-labelledby="calc-title">
+<h2 id="calc-title">真实时薪计算器</h2>
+<p class="calc-note">把房租和通勤一起算进去，看看一小时实际留下多少钱。仅在本机计算，不保存或上传输入。</p>
+<form id="wage-form">
+<div class="calc-fields">
+<label>城市<select id="wage-city"><option>北京</option><option>上海</option><option>广州</option><option>深圳</option></select></label>
+<label>到手月薪（元）<input id="wage-salary" type="number" min="0" max="100000000" step="0.01" value="10000" required></label>
+<label>每月房租（元）<input id="wage-rent" type="number" min="0" max="100000000" step="0.01" value="4000" required></label>
+<label>单程通勤（分钟）<input id="wage-minutes" type="number" min="0" max="720" step="1" value="65" required></label>
+</div>
+<details><summary>补充每月支出（可选，默认 0 元）</summary><div class="calc-fields">
+<label>交通费（元/月）<input id="wage-transport" type="number" min="0" max="100000000" step="0.01" value="0" required></label>
+<label>其他生活费（元/月）<input id="wage-living" type="number" min="0" max="100000000" step="0.01" value="0" required></label>
+</div></details>
+<button type="submit">计算并查看补贴</button>
+</form>
+<p id="wage-error" class="calc-error" role="alert" hidden>请完整填写有效数字：金额不能为负，单程通勤为 0–720 分钟。</p>
+<div id="wage-results" aria-live="polite" aria-atomic="true">
+<dl class="calc-results"><div><dt>真实时薪</dt><dd id="wage-hourly">—</dd></div><div><dt>年结余估算</dt><dd id="wage-annual">—</dd></div><div><dt>每月往返通勤</dt><dd id="wage-hours">—</dd></div></dl>
+<p id="wage-budget" class="calc-note"></p>
+<h3 id="wage-benefit-title">可申领补贴清单（待核对资格）</h3>
+<p class="calc-note">仅凭城市、月薪、房租与通勤无法判断资格。以下为正文中的核查方向，需另核对户籍、年龄、学历、社保、家庭收入、住房等条件；不计入结余。政策沿用原文版本，申领以官方最新公告为准。</p>
+<ul id="wage-benefits"></ul>
+</div>
+<details><summary>计算口径与正文差异</summary><p class="calc-note">参考 <a href="#s1-1">1.1 节</a>的房租与通勤比较思路，每月按 21.75 个工作日、每天 8 小时（174 小时）。月结余＝到手月薪−房租−交通费−其他生活费；真实时薪＝月结余÷（174＋单程分钟×2×21.75÷60）；年结余＝月结余×12。假定全年收入与支出不变，不含年终奖、加班时间及额外收入。</p><p class="calc-note">正文原公式使用减去“多耗时间”，且表格数据不能按所列条件完整复算。本工具将全部往返通勤计入投入时间；结果不复刻原表。未填交通费和其他生活费时，结余只是扣除房租后的余额，不代表实际储蓄。负数表示所填支出超过到手收入。</p></details>
+</section></div>
 <div class="controls"><div class="shell"><form class="filters" role="search" id="search-form"><input id="query" type="search" placeholder="搜索：租房、个税、医保、夜校……" aria-label="全文搜索" autocomplete="off"><select id="city" aria-label="城市"><option value="">全部城市</option><option>北京</option><option>上海</option><option>广州</option><option>深圳</option></select><select id="chapter" aria-label="章节"><option value="">全部章节</option><option value="0">这本书怎么用</option><option value="1">第一章 住处：一间房的价格构成</option><option value="2">第二章 吃饭：把“消费”改回“生产”</option><option value="3">第三章 出行：通勤是可以“套利”的</option><option value="4">第四章 水、电、气、网、话费：把固定支出压到地板</option><option value="5">第五章 医疗与健康：别在小病上花大钱</option><option value="6">第六章 购物：从“买新的”到“买对的”</option><option value="7">第七章 精神生活：一线城市最贵的东西，很多是免费的</option><option value="8">第八章 制度性收入：城市每年发给你的几千块</option><option value="9">第九章 北京：把“通勤半径”换成“租金差”</option><option value="10">第十章 上海：把“保租房”当成第一选项</option><option value="11">第十一章 广州：一线城市里生活成本相对低的一座</option><option value="12">第十二章 深圳：先申请保租房，再谈房租</option><option value="13">第十三章 防守：别先亏掉一笔大的</option><option value="14">第十四章 买房：利率、税费与中介费</option><option value="15">第十五章 买车：补贴、牌照与用车成本</option><option value="16">第十六章 孩子上学：规则搞清了，钱能省一半</option><option value="17">第十七章 理财：省下来的钱怎么打理</option><option value="18">附录A 一年省钱日历</option><option value="19">附录B 链接索引</option><option value="20">附录C 政策文号核对清单</option></select><button type="button" id="reset">重置</button></form><p class="result" id="result" role="status" aria-live="polite">全文已载入。城市筛选同时保留通用章节；多个关键词以空格分隔。</p></div></div>
 <div class="shell"><noscript><p>当前浏览器未启用 JavaScript，全文仍可阅读；搜索与筛选需要启用 JavaScript。</p></noscript><div class="layout"><aside class="sidebar"><details open id="toc"><summary>阅读目录</summary><nav aria-label="阅读目录"><a href="#doc-00">这本书怎么用</a><a href="#doc-01">第一章 住处：一间房的价格构成</a><a href="#doc-02">第二章 吃饭：把“消费”改回“生产”</a><a href="#doc-03">第三章 出行：通勤是可以“套利”的</a><a href="#doc-04">第四章 水、电、气、网、话费：把固定支出压到地板</a><a href="#doc-05">第五章 医疗与健康：别在小病上花大钱</a><a href="#doc-06">第六章 购物：从“买新的”到“买对的”</a><a href="#doc-07">第七章 精神生活：一线城市最贵的东西，很多是免费的</a><a href="#doc-08">第八章 制度性收入：城市每年发给你的几千块</a><a href="#doc-09">第九章 北京：把“通勤半径”换成“租金差”</a><a href="#doc-10">第十章 上海：把“保租房”当成第一选项</a><a href="#doc-11">第十一章 广州：一线城市里生活成本相对低的一座</a><a href="#doc-12">第十二章 深圳：先申请保租房，再谈房租</a><a href="#doc-13">第十三章 防守：别先亏掉一笔大的</a><a href="#doc-14">第十四章 买房：利率、税费与中介费</a><a href="#doc-15">第十五章 买车：补贴、牌照与用车成本</a><a href="#doc-16">第十六章 孩子上学：规则搞清了，钱能省一半</a><a href="#doc-17">第十七章 理财：省下来的钱怎么打理</a><a href="#doc-18">附录A 一年省钱日历</a><a href="#doc-19">附录B 链接索引</a><a href="#doc-20">附录C 政策文号核对清单</a></nav></details></aside><main class="content" id="content"><article id="doc-00" data-city="通用" data-doc="0"><header class="chapter-head"><p class="part">使用说明</p><h2>这本书怎么用</h2><a class="markdown" href="book/00-这本书怎么用.md">阅读 Markdown ↗</a></header><section class="entry intro" id="doc-00-intro"><p>这不是一本教你“节俭”的书。它只讲一件事：在一线城市，同样的收入，为什么有人每月能存下5000，有人月底归零。差别通常不在收入，而在七个决策——住哪、吃什么、怎么通勤、话费套餐、看不看病、买不买东西、知不知道政策。</p></section><section class="entry" id="s0-1"><h2>0.1 这本书写给谁</h2>
 <p>写给在北京、上海、广州、深圳工作，月收入6000~30000元，既不想过苦日子、也不想月底看余额发呆的普通人。尤其写给三类人：</p>
@@ -3470,5 +3499,44 @@ window.addEventListener('hashchange',revealHash);
 document.querySelector('.sidebar').addEventListener('click',event=>{const link=event.target.closest('a');if(link){reset();if(innerWidth<=900)document.querySelector('#toc').open=false;}});
 if(innerWidth<=900)document.querySelector('#toc').open=false;
 filter();revealHash();
+
+const wageForm=document.querySelector('#wage-form');
+const wageFields=['salary','rent','minutes','transport','living'].map(name=>document.querySelector('#wage-'+name));
+const benefitCities={
+ '北京':{href:'https://www.beijing.gov.cn/',entry:'京通或北京市政府官网',housing:'公租房及租金补贴：需核对家庭收入、住房与保障资格。',anchor:'doc-09'},
+ '上海':{href:'https://www.shanghai.gov.cn/',entry:'随申办或上海市政府官网',housing:'保障性租赁住房、浦东青年公寓：需核对就业、年龄、学历及当期房源条件；属于住房支持，不一定发放现金。',anchor:'doc-10'},
+ '广州':{href:'https://www.gdzwfw.gov.cn/',entry:'粤省事或广东政务服务网（选择广州）',housing:'公租房及住房保障：需核对户籍、家庭收入、住房与当期配租条件。',anchor:'doc-11'},
+ '深圳':{href:'https://www.sz.gov.cn/',entry:'i深圳或深圳市政府官网',housing:'保障性租赁住房及人才住房：需核对社保、住房和项目配租资格；属于住房支持，不一定发放现金。',anchor:'doc-12'}
+};
+function calculateWage(){
+ const valid=wageFields.every(field=>field.value.trim()!=='' && field.validity.valid && Number.isFinite(field.valueAsNumber));
+ document.querySelector('#wage-error').hidden=valid;
+ document.querySelector('#wage-results').hidden=!valid;
+ if(!valid)return;
+ const [salary,rent,minutes,transport,living]=wageFields.map(field=>field.valueAsNumber);
+ const hours=minutes*2*21.75/60, balance=salary-rent-transport-living;
+ const money=value=>value.toLocaleString('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2});
+ document.querySelector('#wage-hourly').textContent=money(balance/(174+hours))+' 元/时';
+ document.querySelector('#wage-annual').textContent=money(balance*12)+' 元';
+ document.querySelector('#wage-hours').textContent=money(hours)+' 小时';
+ document.querySelector('#wage-budget').textContent=`每月结余 ${money(balance)} 元；已扣房租 ${money(rent)} 元、交通费 ${money(transport)} 元、其他生活费 ${money(living)} 元。`+(transport===0 || living===0?' 尚有支出按 0 元计算，请补齐实际预算。':'');
+ const selected=document.querySelector('#wage-city').value, info=benefitCities[selected];
+ document.querySelector('#wage-benefit-title').textContent=selected+' · 可申领补贴清单（待核对资格）';
+ const list=document.querySelector('#wage-benefits');
+ list.replaceChildren();
+ const items=[
+  [info.housing, '#'+info.anchor, '阅读城市章'],
+  ['技能提升补贴：需核对失业保险缴费、证书目录、等级与申领时限。','#s8-6','阅读 8.6 节'],
+  ['高校毕业生就业、求职创业及人才租房/生活补贴：需核对毕业年限、就业或落户、社保和所在区当期政策。','#s8-6','阅读 8.6 节'],
+  ['失业保险金：仅在符合失业原因、缴费年限等条件时核查，在职不能据此认定可领。','#s8-5','阅读 8.5 节'],
+  ['住房租金专项附加扣除与年度汇算：属于税收减免或退税，需核对工作城市、无房租赁及实际纳税情况，不是普发补贴。','#s8-1','阅读 8.1 节'],
+  ['官方办理入口：'+info.entry+'，搜索对应事项核对当期条件。',info.href,'打开官方入口']
+ ];
+ for(const [text,href,label] of items){const li=document.createElement('li'),link=document.createElement('a');li.append(document.createTextNode(text+' '));link.href=href;link.textContent=label;li.append(link);list.append(li);}
+}
+wageForm.addEventListener('submit',event=>{event.preventDefault();calculateWage();});
+wageForm.addEventListener('input',calculateWage);
+wageForm.addEventListener('change',calculateWage);
+calculateWage();
 </script>
 </body></html>
