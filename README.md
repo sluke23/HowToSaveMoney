@@ -196,3 +196,7 @@ python3 tools/check_exports.py
 沿用原 PDF 的混合许可：一般正文、表格与测算采用 **CC BY-NC-SA 4.0**；1.3 看房清单、1.4 合同四句话、13.6 维权工具箱及附录 A 日历采用 **CC BY 4.0**；书名、英文副题与原封面版式保留全部权利。具体范围与协议链接见 [LICENSE](LICENSE)。
 
 感谢 [eternity4719/HowToLiveBetter](https://github.com/eternity4719/HowToLiveBetter) 提供的项目思路与组织参考。
+
+## Star 趋势
+
+[![Star History Chart](https://api.star-history.com/svg?repos=sluke23/HowToSaveMoney&type=Date)](https://star-history.com/#sluke23/HowToSaveMoney&Date)
