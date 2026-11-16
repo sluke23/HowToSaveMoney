@@ -13,6 +13,7 @@ SKILL = ROOT / 'skills/save-money-guide'
 RENT_SKILL = ROOT / 'skills/rent-decision-coach'
 INCOME_SKILL = ROOT / 'skills/hidden-income-checker'
 LOAN_SKILL = ROOT / 'skills/loan-cost-xray'
+DISPUTE_SKILL = ROOT / 'skills/dispute-router'
 REPO_URL = 'https://github.com/sluke23/HowToSaveMoney/blob/main/'
 RENT_SECTIONS = {
     'book/01-住处.md': ['s1-2', 's1-3', 's1-4', 's1-5', 's1-6', 's1-7'],
@@ -37,6 +38,13 @@ INCOME_SECTIONS = {
 }
 LOAN_SECTIONS = {
     'book/13-防守.md': ['s13-3'],
+}
+DISPUTE_SECTIONS = {
+    'book/01-住处.md': ['s1-3', 's1-4'],
+    'book/04-水电气网与话费.md': ['s4-1', 's4-2', 's4-4'],
+    'book/06-购物.md': ['s6-2'],
+    'book/08-制度性收入.md': ['s8-4'],
+    'book/13-防守.md': ['s13-1', 's13-2', 's13-3', 's13-4', 's13-5', 's13-6'],
 }
 
 
@@ -176,11 +184,24 @@ def loan_bundle():
         '借贷成本相关小节摘录；政策及法律判断须另查现行原文，数学计算不证明合同合法性。')
 
 
+def dispute_bundle():
+    return excerpt_bundle(
+        DISPUTE_SECTIONS, '维权分诊资料目录',
+        ['先读 [渠道与判断边界](../routes.md)，按 [证据与行动模板](../evidence-and-actions.md) 整理材料；',
+         '程序与期限按 [官方核对方法](../official-verification.md) 查适用原文。'],
+        ['1.3–1.4、13.1 查租赁主体、合同及交接；13.2 查预付，6.2 查二手，4.1–4.2/4.4 查账单与订阅。',
+         '8.4、13.4 查用工与参保线索；13.3、13.5 查借贷及诈骗风险；13.6 提供基础维权工具箱。',
+         '原文的固定递进顺序、热线范围、证据排序和清理提示需按上层方法文件限定，不能直接作为程序或证据规则。',
+         '新增劳动争议与正式程序指引为补充分诊方法，不声称原书已完整覆盖相关法律。'],
+        '维权相关小节摘录；保留原文不等于认可其法律简化表述，受理、证据及期限另核适用官方规则。')
+
+
 def bundles():
     return [(SKILL, 'references', bundle()),
             (RENT_SKILL, 'references/guide', rent_bundle()),
             (INCOME_SKILL, 'references/guide', income_bundle()),
-            (LOAN_SKILL, 'references/guide', loan_bundle())]
+            (LOAN_SKILL, 'references/guide', loan_bundle()),
+            (DISPUTE_SKILL, 'references/guide', dispute_bundle())]
 
 
 def stale_files(skill, generated_root, files):

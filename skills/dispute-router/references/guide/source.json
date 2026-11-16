@@ -1,0 +1,43 @@
+{
+  "author": "毛毛&luke",
+  "repository": "https://github.com/sluke23/HowToSaveMoney/",
+  "source_version": "1.0（2026年10月）",
+  "content_revision": "2026-11-16",
+  "note": "维权相关小节摘录；保留原文不等于认可其法律简化表述，受理、证据及期限另核适用官方规则。",
+  "sections": {
+    "book/01-住处.md": [
+      "s1-3",
+      "s1-4"
+    ],
+    "book/04-水电气网与话费.md": [
+      "s4-1",
+      "s4-2",
+      "s4-4"
+    ],
+    "book/06-购物.md": [
+      "s6-2"
+    ],
+    "book/08-制度性收入.md": [
+      "s8-4"
+    ],
+    "book/13-防守.md": [
+      "s13-1",
+      "s13-2",
+      "s13-3",
+      "s13-4",
+      "s13-5",
+      "s13-6"
+    ]
+  },
+  "sources": {
+    "book/01-住处.md": "3c6b631be19227a5513368234cf303dd2f13606671800f26be5c1b54ddb8ed09",
+    "book/04-水电气网与话费.md": "b760a39649fa7f16cab87d895f67d3bed4d8d5bba7a5891f906dee9c18b83dae",
+    "book/06-购物.md": "b1c22b5f6462f546c3aa44f492cea42fc4f8aaa03830e65eca4b4bda17fc28dd",
+    "book/08-制度性收入.md": "c8b5aa36e3e2e312608b47d4e54a71a6db3d2b5c8a87b0a5d236f3d1f7fb8083",
+    "book/13-防守.md": "dc03fd317852caeea9218b563d56567c7606c687e9dc0cabbcafe93cd796c97b",
+    "docs/待核实清单.md": "3756bc23b6e39a649a7077147f2c6a4fa3269305504ee70294ed7e88c5f0328d",
+    "docs/版权与使用说明.md": "00df037cd0630869744735bd557974eeef1413f726e48b968fed840efc8036a4",
+    "docs/2026-11-16-读者反馈修订.md": "8a2b94997875c7b621ead051ad39a5bfc13e0670116f30d0d19924beca8f962e",
+    "LICENSE": "d2c17625fab37426806bc25c380e5a45828a18a573ed7328b02d1222f943670e"
+  }
+}

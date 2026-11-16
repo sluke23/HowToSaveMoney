@@ -128,6 +128,28 @@ mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills" && cp -R skills/loan-cost-xray "${
 
 [安装与完整测算示例](docs/使用借贷成本透视器Skill.md) · [查看 Skill](skills/loan-cost-xray/SKILL.md)
 
+## 维权分诊台：该找谁、第一步做什么、证据留到什么程度
+
+**“房东不退押金”“健身房关门”“没签合同被欠薪”，用 `dispute-router` 把经历整理成下一步。**
+
+按双方关系和诉求选主渠道，区分协商、投诉举报、劳动仲裁与诉讼；列出今天能做的第一步、关键证据和缺口，附可复制的事实说明草稿。比如私人房东扣押金，先对照合同、交接与扣款理由，再判断催告或争议解决渠道；不会一律让你找 12315。
+
+在仓库根目录按所用工具安装：
+
+```bash
+# Claude Code
+mkdir -p "$HOME/.claude/skills" && cp -R skills/dispute-router "$HOME/.claude/skills/"
+```
+
+```bash
+# Codex
+mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills" && cp -R skills/dispute-router "${CODEX_HOME:-$HOME/.codex}/skills/"
+```
+
+打开新会话，用 `/dispute-router`（Claude Code）或 `$dispute-router`（Codex）调用。可独立安装；具体管辖、期限及提交要求需核对现行官方资料。
+
+[安装与四个提问示例](docs/使用维权分诊台Skill.md) · [查看 Skill](skills/dispute-router/SKILL.md)
+
 ## 也可以直接读指南
 
 [开始阅读](book/00-这本书怎么用.md) · [按问题查阅](#按问题查阅) · [静态阅读页](index.html) · [EPUB / PDF 等阅读格式](tools/README.md) · [参与完善](CONTRIBUTING.md)
