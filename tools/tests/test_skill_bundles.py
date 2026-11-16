@@ -59,6 +59,15 @@ class SkillBundleTests(unittest.TestCase):
         for path, expected in metadata['sources'].items():
             self.assertEqual(hashlib.sha256((ROOT / path).read_bytes()).hexdigest(), expected)
 
+    def test_loan_package_preserves_source_and_omits_unverified_mortgage_policy(self):
+        result = BUILDER.loan_bundle()
+        metadata = json.loads(result['references/guide/source.json'])
+        self.assertEqual(metadata['sections'], {'book/13-防守.md': ['s13-3']})
+        self.assertIn('id="s13-3"', result['references/guide/book/13-防守.md'])
+        self.assertNotIn('references/guide/book/14-买房.md', result)
+        for path, expected in metadata['sources'].items():
+            self.assertEqual(hashlib.sha256((ROOT / path).read_bytes()).hexdigest(), expected)
+
     def test_sync_check_owns_only_generated_subtree(self):
         with tempfile.TemporaryDirectory(prefix='skill-sync-') as folder:
             skill = Path(folder)

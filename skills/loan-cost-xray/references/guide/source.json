@@ -1,0 +1,19 @@
+{
+  "author": "毛毛&luke",
+  "repository": "https://github.com/sluke23/HowToSaveMoney/",
+  "source_version": "1.0（2026年10月）",
+  "content_revision": "2026-11-16",
+  "note": "借贷成本相关小节摘录；政策及法律判断须另查现行原文，数学计算不证明合同合法性。",
+  "sections": {
+    "book/13-防守.md": [
+      "s13-3"
+    ]
+  },
+  "sources": {
+    "book/13-防守.md": "dc03fd317852caeea9218b563d56567c7606c687e9dc0cabbcafe93cd796c97b",
+    "docs/待核实清单.md": "3756bc23b6e39a649a7077147f2c6a4fa3269305504ee70294ed7e88c5f0328d",
+    "docs/版权与使用说明.md": "00df037cd0630869744735bd557974eeef1413f726e48b968fed840efc8036a4",
+    "docs/2026-11-16-读者反馈修订.md": "8a2b94997875c7b621ead051ad39a5bfc13e0670116f30d0d19924beca8f962e",
+    "LICENSE": "d2c17625fab37426806bc25c380e5a45828a18a573ed7328b02d1222f943670e"
+  }
+}

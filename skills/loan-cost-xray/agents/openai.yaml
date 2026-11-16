@@ -1,0 +1,4 @@
+interface:
+  display_name: "借贷成本透视器"
+  short_description: "把日息、月费率和分期费用还原为现金流，用年化 IRR 看清实际融资成本"
+  default_prompt: "使用 $loan-cost-xray，把我的实际到账、还款计划与全部强制费用还原为现金流，计算有效年化 IRR，说明与广告费率的差别及待核对项。"

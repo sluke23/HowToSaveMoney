@@ -95,7 +95,7 @@ Claude Code 把示例的 `$hidden-income-checker` 换为 `/hidden-income-checker
 
 ## 维护与许可
 
-相关正文和政策线索维护在 `book/`、`docs/`。修改后运行以下命令，同步三个 Skill 的内置资料：
+相关正文和政策线索维护在 `book/`、`docs/`。修改后运行以下命令，同步仓库各 Skill 的内置资料：
 
 ```bash
 python3 tools/build_skill.py

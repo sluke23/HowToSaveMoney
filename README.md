@@ -106,6 +106,28 @@ mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills" && cp -R skills/hidden-income-chec
 
 [安装与提问示例](docs/使用隐性收入申领对照器Skill.md) · [查看 Skill](skills/hidden-income-checker/SKILL.md)
 
+## 借贷成本透视器：把利率话术翻译成年化 IRR
+
+**“日息万五”“月费率 0.6%”“零利息”，先还原实际到账与全部还款，再用 `loan-cost-xray` 统一比较。**
+
+内置 IRR/XIRR 计算器，计入手续费、强制服务费及还款时间，分别列出有效年化和名义年化，也能比较提前结清前后成本。比如，同样借 1 万元、12 个月共付 720 元费用，先息后本的有效年化约 7.44%，逐月还本但按原本金固定收费的约 13.84%（具体还款表见使用示例）。
+
+在仓库根目录按所用工具安装：
+
+```bash
+# Claude Code
+mkdir -p "$HOME/.claude/skills" && cp -R skills/loan-cost-xray "$HOME/.claude/skills/"
+```
+
+```bash
+# Codex
+mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills" && cp -R skills/loan-cost-xray "${CODEX_HOME:-$HOME/.codex}/skills/"
+```
+
+打开新会话，用 `/loan-cost-xray`（Claude Code）或 `$loan-cost-xray`（Codex）调用。可独立安装，计算器只需 Python 3.9+ 标准库。
+
+[安装与完整测算示例](docs/使用借贷成本透视器Skill.md) · [查看 Skill](skills/loan-cost-xray/SKILL.md)
+
 ## 也可以直接读指南
 
 [开始阅读](book/00-这本书怎么用.md) · [按问题查阅](#按问题查阅) · [静态阅读页](index.html) · [EPUB / PDF 等阅读格式](tools/README.md) · [参与完善](CONTRIBUTING.md)

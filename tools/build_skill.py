@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SKILL = ROOT / 'skills/save-money-guide'
 RENT_SKILL = ROOT / 'skills/rent-decision-coach'
 INCOME_SKILL = ROOT / 'skills/hidden-income-checker'
+LOAN_SKILL = ROOT / 'skills/loan-cost-xray'
 REPO_URL = 'https://github.com/sluke23/HowToSaveMoney/blob/main/'
 RENT_SECTIONS = {
     'book/01-住处.md': ['s1-2', 's1-3', 's1-4', 's1-5', 's1-6', 's1-7'],
@@ -33,6 +34,9 @@ INCOME_SECTIONS = {
     'book/10-上海.md': ['s10-1', 's10-2'],
     'book/11-广州.md': ['s11-1'],
     'book/12-深圳.md': ['s12-1', 's12-2', 's12-4'],
+}
+LOAN_SECTIONS = {
+    'book/13-防守.md': ['s13-3'],
 }
 
 
@@ -163,10 +167,20 @@ def income_bundle():
         '补贴与待遇相关小节摘录；历史数额与入口仅作线索，不代表现行资格或已获批。')
 
 
+def loan_bundle():
+    return excerpt_bundle(
+        LOAN_SECTIONS, '借贷成本资料目录',
+        ['先读 [现金流还原](../cashflow-modeling.md)，按 [IRR 算法](../irr-method.md) 统一计算。'],
+        ['13.3 是借贷成本比较的正文来源；新增算法、输入格式与情景比较在上层方法文件。',
+         '14.2 的贷款贴息与提前还款阶段结论仍待核实，未纳入摘录，不作为贷款成本计算依据。'],
+        '借贷成本相关小节摘录；政策及法律判断须另查现行原文，数学计算不证明合同合法性。')
+
+
 def bundles():
     return [(SKILL, 'references', bundle()),
             (RENT_SKILL, 'references/guide', rent_bundle()),
-            (INCOME_SKILL, 'references/guide', income_bundle())]
+            (INCOME_SKILL, 'references/guide', income_bundle()),
+            (LOAN_SKILL, 'references/guide', loan_bundle())]
 
 
 def stale_files(skill, generated_root, files):
