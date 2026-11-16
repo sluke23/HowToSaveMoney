@@ -19,7 +19,7 @@
 1. 修改 `book/` 或 `docs/` 中对应的 Markdown；需要时更新 `docs/待核实清单.md`。
 2. 保留既有小节编号和 `<a id="s…">` 锚点，方便读者继续使用旧链接。
 3. 重要内容变更写入 `CHANGELOG.md`；新增或移动篇目时同步 `README.md` 与 `docs/内容映射.json`。原 PDF 页码仅代表初始来源，不要为新增内容虚构来源页码。
-4. 执行下面的构建与检查，并将更新后的 `index.html`、`skills/save-money-guide/references/` 和 `skills/rent-decision-coach/references/guide/` 一并提交。
+4. 执行下面的构建与检查，并将更新后的 `index.html`、`skills/save-money-guide/references/`、`skills/rent-decision-coach/references/guide/` 和 `skills/hidden-income-checker/references/guide/` 一并提交。
 
 ```bash
 python3 -m pip install -r tools/requirements.txt

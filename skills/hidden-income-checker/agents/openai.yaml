@@ -1,0 +1,4 @@
+interface:
+  display_name: "隐性收入申领对照器"
+  short_description: "按城市和个人情况核对可能漏办的补贴、退税与待遇，列清条件、材料和下一步"
+  default_prompt: "使用 $hidden-income-checker，根据我的城市、就业参保、住房和家庭情况，找出可能遗漏的待遇，区分已享受与待核实，并列出官方入口和下一步。"

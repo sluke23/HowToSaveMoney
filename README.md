@@ -84,6 +84,28 @@ mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills" && cp -R skills/rent-decision-coac
 
 [安装与三个完整示例](docs/使用租房决策官Skill.md) · [查看 Skill](skills/rent-decision-coach/SKILL.md)
 
+## 隐性收入申领对照器：有哪些钱忘了领
+
+**告诉它你的城市、就业参保、住房和家庭情况，对照可能漏填、漏报、漏办的待遇：`hidden-income-checker`。**
+
+覆盖个税扣除与汇算、公积金提取、就业人才与技能补贴、失业和生育待遇等线索。逐项核对是否已享受、还缺什么、由谁办理及当前窗口，列出官方入口和下一步；现金补贴、退税、账户提取与公共服务分别呈现。
+
+在仓库根目录按所用工具安装：
+
+```bash
+# Claude Code
+mkdir -p "$HOME/.claude/skills" && cp -R skills/hidden-income-checker "$HOME/.claude/skills/"
+```
+
+```bash
+# Codex
+mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills" && cp -R skills/hidden-income-checker "${CODEX_HOME:-$HOME/.codex}/skills/"
+```
+
+打开新会话，用 `/hidden-income-checker`（Claude Code）或 `$hidden-income-checker`（Codex）调用。可独立安装；当前资格、金额和受理状态需核对官方资料。
+
+[安装与提问示例](docs/使用隐性收入申领对照器Skill.md) · [查看 Skill](skills/hidden-income-checker/SKILL.md)
+
 ## 也可以直接读指南
 
 [开始阅读](book/00-这本书怎么用.md) · [按问题查阅](#按问题查阅) · [静态阅读页](index.html) · [EPUB / PDF 等阅读格式](tools/README.md) · [参与完善](CONTRIBUTING.md)

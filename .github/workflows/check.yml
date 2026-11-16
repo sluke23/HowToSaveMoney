@@ -20,5 +20,5 @@ jobs:
         run: python tools/build_skill.py --check
       - name: 检查本地链接、表格与来源
         run: python tools/check.py
-      - name: 检查租房测算与独立运行
+      - name: 检查租房测算、资料打包与独立运行
         run: python -m unittest discover -s tools/tests

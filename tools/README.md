@@ -91,15 +91,15 @@ PDF 排版变更后还应渲染检查封面、目录、密集表格、长链接�
 python tools/build_site.py
 python tools/build_site.py --check
 
-# 同步省钱指南与租房决策官的离线 Skill 资料
+# 同步三个 Skill 的离线资料
 python tools/build_skill.py
 python tools/build_skill.py --check
 
-# 租房费用计算器的回归检查（标准库）
+# 租房测算、资料打包与独立运行检查（标准库）
 python -m unittest discover -s tools/tests
 ```
 
-`build_skill.py` 为 `save-money-guide` 打包完整指南，为 `rent-decision-coach` 摘录租房相关小节、待核实清单及来源哈希；`tools/check.py` 同时检查两者。租房决策官的人工维护方法文件不在自动生成子目录 `references/guide/` 内，重建时会保留。使用说明见[租房决策官 Skill](../docs/使用租房决策官Skill.md)。
+`build_skill.py` 为 `save-money-guide` 打包完整指南，为 `rent-decision-coach` 摘录租房资料，为 `hidden-income-checker` 摘录补贴、税务、公积金及保险待遇线索；摘录均附待核实清单及来源哈希，`tools/check.py` 同时检查三个 Skill。两个专题 Skill 的人工维护方法文件放在自动生成子目录 `references/guide/` 之外，重建时会保留。使用说明见[租房决策官](../docs/使用租房决策官Skill.md)与[隐性收入申领对照器](../docs/使用隐性收入申领对照器Skill.md)。
 
 `index.html` 是项目网站；`dist/HowToSaveMoney.html` 是无仓库文件依赖的完整单文件阅读版，适合独立分发。
 

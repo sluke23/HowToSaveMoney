@@ -11,6 +11,7 @@ from urllib.parse import quote, unquote, urlsplit
 ROOT = Path(__file__).resolve().parents[1]
 SKILL = ROOT / 'skills/save-money-guide'
 RENT_SKILL = ROOT / 'skills/rent-decision-coach'
+INCOME_SKILL = ROOT / 'skills/hidden-income-checker'
 REPO_URL = 'https://github.com/sluke23/HowToSaveMoney/blob/main/'
 RENT_SECTIONS = {
     'book/01-住处.md': ['s1-2', 's1-3', 's1-4', 's1-5', 's1-6', 's1-7'],
@@ -22,6 +23,16 @@ RENT_SECTIONS = {
     'book/11-广州.md': ['s11-1'],
     'book/12-深圳.md': ['s12-1', 's12-2'],
     'book/13-防守.md': ['s13-1', 's13-6'],
+}
+INCOME_SECTIONS = {
+    'book/01-住处.md': ['s1-6'],
+    'book/05-医疗与健康.md': ['s5-1', 's5-2', 's5-4'],
+    'book/06-购物.md': ['s6-5'],
+    'book/08-制度性收入.md': ['s8-1', 's8-2', 's8-3', 's8-4', 's8-5', 's8-6'],
+    'book/09-北京.md': ['s9-1'],
+    'book/10-上海.md': ['s10-1', 's10-2'],
+    'book/11-广州.md': ['s11-1'],
+    'book/12-深圳.md': ['s12-1', 's12-2', 's12-4'],
 }
 
 
@@ -69,7 +80,7 @@ def bundle():
     return result
 
 
-def repo_links(text, source_path):
+def repo_links(text, source_path, sections):
     """Keep omitted cross-references usable without depending on a checkout."""
     def replace(match):
         label, href = match.groups()
@@ -77,7 +88,7 @@ def repo_links(text, source_path):
         if parts.scheme or parts.netloc:
             return match.group(0)
         target = posixpath.normpath(posixpath.join(posixpath.dirname(source_path), unquote(parts.path))) if parts.path else source_path
-        bundled = target in RENT_SECTIONS and (not parts.fragment or parts.fragment in RENT_SECTIONS[target])
+        bundled = target in sections and (not parts.fragment or parts.fragment in sections[target])
         bundled = bundled or target in {'docs/待核实清单.md', 'docs/版权与使用说明.md', 'docs/2026-11-16-读者反馈修订.md', 'LICENSE'}
         if bundled:
             href = posixpath.relpath(target, posixpath.dirname(source_path))
@@ -91,15 +102,15 @@ def repo_links(text, source_path):
     return re.sub(r'\[([^\]\n]*)\]\(([^\n]+?)\)', replace, text)
 
 
-def rent_bundle():
-    """Only rental-related sections; original anchors and mixed licenses remain."""
+def excerpt_bundle(sections, index_title, intro, reading_notes, source_note):
+    """Extract selected sections with links scoped to this standalone package."""
     manifest = json.loads((ROOT / 'docs/内容映射.json').read_text(encoding='utf-8'))
     result = {}
-    index = ['# 租房资料目录', '', f'作者：{manifest["author"]}。源版本：{manifest["source_version"]}。', '',
+    index = [f'# {index_title}', '', f'作者：{manifest["author"]}。源版本：{manifest["source_version"]}。', '',
              '本目录由 tools/build_skill.py 自动从维护源摘录，保留原编号。仅摘选，不代表重新核实政策、行情或原书中的经验数值。',
-             '原书 1.1 公式仍待核实，未打包；计算见 [费用与通勤算法](../decision-math.md)。', '',
+             *intro, '',
              '| 资料 | 内置小节 |', '| --- | --- |']
-    for name, ids in RENT_SECTIONS.items():
+    for name, ids in sections.items():
         text = (ROOT / name).read_text(encoding='utf-8')
         blocks = {}
         matches = list(re.finditer(r'^<a id="(s\d+-\d+)"></a>\s*$', text, re.M))
@@ -111,31 +122,51 @@ def rent_bundle():
             raise ValueError(f'{name} 缺少摘录锚点：{sorted(missing)}')
         title = text.splitlines()[0]
         license_note = next((line for line in text.splitlines() if line.startswith('> 许可：')), '> 许可：CC BY-NC-SA 4.0。')
-        body = '\n\n'.join(repo_links(blocks[anchor], name) for anchor in ids)
+        body = '\n\n'.join(repo_links(blocks[anchor], name, sections) for anchor in ids)
         header = f'{title}\n\n{license_note}\n\n> 作者：{manifest["author"]}。按原章节摘录；经验价格、法律简化表述和历史政策需另核。\n\n'
         result['references/guide/' + name] = header + body + '\n'
         index.append(f'| [{title.lstrip("# ")}]({name}) | {"、".join(anchor[1:].replace("-", ".") for anchor in ids)} |')
     extra_paths = ['docs/待核实清单.md', 'docs/版权与使用说明.md', 'docs/2026-11-16-读者反馈修订.md']
     for name in extra_paths:
-        result['references/guide/' + name] = repo_links((ROOT / name).read_text(encoding='utf-8'), name)
+        result['references/guide/' + name] = repo_links((ROOT / name).read_text(encoding='utf-8'), name, sections)
     result['references/guide/LICENSE'] = (ROOT / 'LICENSE').read_text(encoding='utf-8')
-    index.extend(['', '北上广深分别读 9.1、10.1–10.2、11.1、12.1；短期求职过渡另读 12.2。',
-                  '交通报价读 3.1–3.3；水电宽带读 4.2–4.3；租金扣除读 8.1–8.2。政策当前有效性须另查官方文件。', '',
+    index.extend(['', *reading_notes, '',
                   '[待核实清单](docs/待核实清单.md) · [修订记录](docs/2026-11-16-读者反馈修订.md)', '',
                   '[来源与哈希](source.json) · [混合许可](LICENSE) · [版权说明](docs/版权与使用说明.md)', ''])
     result['references/guide/目录.md'] = '\n'.join(index)
-    paths = list(RENT_SECTIONS) + extra_paths + ['LICENSE']
+    paths = list(sections) + extra_paths + ['LICENSE']
     source = {'author': manifest['author'], 'repository': REPO_URL.removesuffix('blob/main/'),
               'source_version': manifest['source_version'], 'content_revision': manifest.get('content_revision'),
-              'note': '租房相关小节摘录；未随包包含原始 PDF，不代表现行政策已核实。',
-              'sections': RENT_SECTIONS,
+              'note': source_note,
+              'sections': sections,
               'sources': {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in paths}}
     result['references/guide/source.json'] = json.dumps(source, ensure_ascii=False, indent=2) + '\n'
     return result
 
 
+def rent_bundle():
+    return excerpt_bundle(
+        RENT_SECTIONS, '租房资料目录',
+        ['原书 1.1 公式仍待核实，未打包；计算见 [费用与通勤算法](../decision-math.md)。'],
+        ['北上广深分别读 9.1、10.1–10.2、11.1、12.1；短期求职过渡另读 12.2。',
+         '交通报价读 3.1–3.3；水电宽带读 4.2–4.3；租金扣除读 8.1–8.2。政策当前有效性须另查官方文件。'],
+        '租房相关小节摘录；未随包包含原始 PDF，不代表现行政策已核实。')
+
+
+def income_bundle():
+    return excerpt_bundle(
+        INCOME_SECTIONS, '隐性收入与待遇资料目录',
+        ['先按 [项目对照](../benefit-map.md) 筛查，再按 [核对方法](../verification.md) 查现行官方规则。'],
+        ['8.1–8.2 查扣除与汇算，8.3 查账户提取，8.4–8.6 查参保、保险待遇、技能及其他补贴线索。',
+         '住房读 1.6 和对应城市小节；就医读 5.1–5.2，公共服务读 5.4，原计划消费补贴读 6.5。',
+         '存在项目不等于本人可申领；核对已享受、当前窗口、重复与互斥限制。'],
+        '补贴与待遇相关小节摘录；历史数额与入口仅作线索，不代表现行资格或已获批。')
+
+
 def bundles():
-    return [(SKILL, 'references', bundle()), (RENT_SKILL, 'references/guide', rent_bundle())]
+    return [(SKILL, 'references', bundle()),
+            (RENT_SKILL, 'references/guide', rent_bundle()),
+            (INCOME_SKILL, 'references/guide', income_bundle())]
 
 
 def stale_files(skill, generated_root, files):
