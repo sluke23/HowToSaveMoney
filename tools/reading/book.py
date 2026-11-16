@@ -38,7 +38,7 @@ def content(source):
 def load_book():
     manifest = json.loads((ROOT / 'docs/内容映射.json').read_text(encoding='utf-8'))
     source_paths = [doc['path'] for doc in manifest['documents']]
-    source_paths += ['docs/待核实清单.md', 'docs/版权与使用说明.md']
+    source_paths += ['docs/待核实清单.md', 'docs/版权与使用说明.md', 'docs/2026-11-16-读者反馈修订.md']
     pages = [{'path': 'README.md', 'id': 'front', 'title': '版本与阅读说明',
               'md': f'''# 版本与阅读说明
 
@@ -50,9 +50,9 @@ def load_book():
 
 北京 · 上海 · 广州 · 深圳
 
-原文版本：{manifest['source_version']}。
+原文版本：{manifest['source_version']}。局部修订：2026 年 11 月 16 日；具体核查范围见书末修订记录。
 
-此阅读版从项目当前 Markdown 生成，包含使用说明、17 章、3 个附录、待核实清单和版权说明。原文政策基线不代表导出当天仍然有效。正文里的疑点请结合书末“待核实清单”阅读；官方入口不等于当前资格或金额已获核实。
+此阅读版从项目当前 Markdown 生成，包含使用说明、17 章、3 个附录、待核实清单、版权说明和读者反馈修订记录。原文政策基线不代表导出当天仍然有效。正文里的疑点请结合书末“待核实清单”阅读；官方入口不等于当前资格或金额已获核实。
 
 许可：一般正文 CC BY-NC-SA 4.0；指定工具内容 CC BY 4.0。完整适用范围见本书“许可范围”。
 

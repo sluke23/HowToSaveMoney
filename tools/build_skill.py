@@ -13,7 +13,7 @@ SKILL = ROOT / 'skills/save-money-guide'
 def bundle():
     manifest = json.loads((ROOT / 'docs/内容映射.json').read_text(encoding='utf-8'))
     docs = manifest['documents']
-    paths = [doc['path'] for doc in docs] + ['docs/待核实清单.md', 'docs/版权与使用说明.md']
+    paths = [doc['path'] for doc in docs] + ['docs/待核实清单.md', 'docs/版权与使用说明.md', 'docs/2026-11-16-读者反馈修订.md']
     result = {}
     for name in paths:
         text = (ROOT / name).read_text(encoding='utf-8')
@@ -26,7 +26,7 @@ def bundle():
     # The instructions themselves inherit the existing general-document license.
     result['references/LICENSE'] = license_text
     lines = ['# 资料目录', '', f'作者：{manifest["author"]}。原文版本：{manifest["source_version"]}。',
-             '', '正文金额沿用原书口径，不能据此认定当前政策有效。',
+             '', '原文基线为 2026 年 10 月，2026 年 11 月 16 日部分修订；核查范围见随包修订记录，不能据此认定所有政策当前有效。',
              '先读 [待核实清单](docs/待核实清单.md)，再按问题读取相关小节。', '',
              '| 主题 | 资料 |', '| --- | --- |']
     topics = ['阅读方法与适用人群', '租房、看房、合同、通勤选址、政策房', '自炊、买菜、食堂、外卖',
@@ -41,9 +41,11 @@ def bundle():
     lines.extend(f'| {topic} | [{doc["title"]}]({doc["path"]}) |' for topic, doc in zip(topics, docs))
     lines.extend(['', '涉及城市规则时，主题章与对应城市章交叉阅读。', '',
                   '## 来源与许可', '', '打包版本及来源哈希见 [source.json](source.json)。',
+                  '修订材料与未确认事项见 [读者反馈修订记录](docs/2026-11-16-读者反馈修订.md)。',
                   '混合许可见 [LICENSE](LICENSE)，作者与版权声明见 [版权与使用说明](docs/版权与使用说明.md)。', ''])
     result['references/目录.md'] = '\n'.join(lines)
     source = {'author': manifest['author'], 'source_version': manifest['source_version'],
+              'content_revision': manifest.get('content_revision'),
               'source_pdf_name': manifest['source_pdf_name'], 'source_pdf_sha256': manifest['source_sha256'],
               'source_note': manifest['source_note'],
               'note': '离线 Markdown 快照；PDF 不随包提供，政策未作当前有效性保证。',
