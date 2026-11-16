@@ -1,0 +1,4 @@
+interface:
+  display_name: "租房决策官"
+  short_description: "替你做住哪、怎么签、怎么谈三个租房决策，算清通勤、合同风险和议价底线"
+  default_prompt: "使用 $rent-decision-coach，结合我的候选房源、通勤和租约，帮我决定住哪、怎么签、怎么谈，并给出可复算的依据。"

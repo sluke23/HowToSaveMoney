@@ -58,6 +58,32 @@ Skill 内置《一线城市省钱指南》的 **17 章、94 节、3 个附录和
 
 [安装与使用](docs/使用省钱指南Skill.md) · [查看 Skill](skills/save-money-guide/SKILL.md) · [在线阅读与时薪计算器](https://sluke23.github.io/HowToSaveMoney/) · [完整目录](#目录)
 
+## 租房决策官：住哪、怎么签、怎么谈
+
+**给正在找房或续租的人，一个专门做租房决策的 Skill：`rent-decision-coach`。**
+
+| 决策 | 它帮你做什么 |
+| --- | --- |
+| 住哪 | 比较房租、交通费、通勤时间，算搬家回本期和首期资金需求 |
+| 怎么签 | 检查押金、维修、提前退租和收款主体，给出可协商的替换条款 |
+| 怎么谈 | 根据可比房源与搬家成本确定报价，准备新租、续租话术和被拒后的退路 |
+
+在仓库根目录按所用工具安装：
+
+```bash
+# Claude Code
+mkdir -p "$HOME/.claude/skills" && cp -R skills/rent-decision-coach "$HOME/.claude/skills/"
+```
+
+```bash
+# Codex
+mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills" && cp -R skills/rent-decision-coach "${CODEX_HOME:-$HOME/.codex}/skills/"
+```
+
+打开新会话，用 `/rent-decision-coach`（Claude Code）或 `$rent-decision-coach`（Codex）调用。可独立安装，内置租房资料与 Python 标准库计算器。
+
+[安装与三个完整示例](docs/使用租房决策官Skill.md) · [查看 Skill](skills/rent-decision-coach/SKILL.md)
+
 ## 也可以直接读指南
 
 [开始阅读](book/00-这本书怎么用.md) · [按问题查阅](#按问题查阅) · [静态阅读页](index.html) · [EPUB / PDF 等阅读格式](tools/README.md) · [参与完善](CONTRIBUTING.md)

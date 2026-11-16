@@ -93,12 +93,11 @@ def main():
     from build_site import build
     if (ROOT / 'index.html').read_text(encoding='utf-8') != build():
         errors.append('阅读页已过期，请运行 python3 tools/build_site.py')
-    from build_skill import bundle, SKILL
-    expected = bundle()
-    stale = [name for name, text in expected.items() if not (SKILL / name).is_file() or (SKILL / name).read_text(encoding='utf-8') != text]
-    extra = [str(p.relative_to(SKILL)) for p in (SKILL / 'references').rglob('*') if p.is_file() and p.relative_to(SKILL).as_posix() not in expected]
-    if stale or extra:
-        errors.append('Skill 资料已过期，请运行 python3 tools/build_skill.py：' + ', '.join(stale + extra))
+    from build_skill import bundles, stale_files
+    for skill, generated_root, expected in bundles():
+        stale = stale_files(skill, generated_root, expected)
+        if stale:
+            errors.append(f'{skill.name} 资料已过期，请运行 python3 tools/build_skill.py：' + ', '.join(stale))
     if errors:
         print('\n'.join(errors))
         return 1

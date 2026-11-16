@@ -3,11 +3,26 @@
 import argparse
 import hashlib
 import json
+import posixpath
 import re
 from pathlib import Path
+from urllib.parse import quote, unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILL = ROOT / 'skills/save-money-guide'
+RENT_SKILL = ROOT / 'skills/rent-decision-coach'
+REPO_URL = 'https://github.com/sluke23/HowToSaveMoney/blob/main/'
+RENT_SECTIONS = {
+    'book/01-住处.md': ['s1-2', 's1-3', 's1-4', 's1-5', 's1-6', 's1-7'],
+    'book/03-出行.md': ['s3-1', 's3-2', 's3-3'],
+    'book/04-水电气网与话费.md': ['s4-2', 's4-3'],
+    'book/08-制度性收入.md': ['s8-1', 's8-2'],
+    'book/09-北京.md': ['s9-1', 's9-5'],
+    'book/10-上海.md': ['s10-1', 's10-2', 's10-6'],
+    'book/11-广州.md': ['s11-1'],
+    'book/12-深圳.md': ['s12-1', 's12-2'],
+    'book/13-防守.md': ['s13-1', 's13-6'],
+}
 
 
 def bundle():
@@ -54,27 +69,102 @@ def bundle():
     return result
 
 
+def repo_links(text, source_path):
+    """Keep omitted cross-references usable without depending on a checkout."""
+    def replace(match):
+        label, href = match.groups()
+        parts = urlsplit(href)
+        if parts.scheme or parts.netloc:
+            return match.group(0)
+        target = posixpath.normpath(posixpath.join(posixpath.dirname(source_path), unquote(parts.path))) if parts.path else source_path
+        bundled = target in RENT_SECTIONS and (not parts.fragment or parts.fragment in RENT_SECTIONS[target])
+        bundled = bundled or target in {'docs/待核实清单.md', 'docs/版权与使用说明.md', 'docs/2026-11-16-读者反馈修订.md', 'LICENSE'}
+        if bundled:
+            href = posixpath.relpath(target, posixpath.dirname(source_path))
+            if parts.fragment:
+                href += '#' + parts.fragment
+            return f'[{label}]({href})'
+        url = REPO_URL + quote(target, safe='/')
+        if parts.fragment:
+            url += '#' + quote(parts.fragment)
+        return f'[{label}]({url})'
+    return re.sub(r'\[([^\]\n]*)\]\(([^\n]+?)\)', replace, text)
+
+
+def rent_bundle():
+    """Only rental-related sections; original anchors and mixed licenses remain."""
+    manifest = json.loads((ROOT / 'docs/内容映射.json').read_text(encoding='utf-8'))
+    result = {}
+    index = ['# 租房资料目录', '', f'作者：{manifest["author"]}。源版本：{manifest["source_version"]}。', '',
+             '本目录由 tools/build_skill.py 自动从维护源摘录，保留原编号。仅摘选，不代表重新核实政策、行情或原书中的经验数值。',
+             '原书 1.1 公式仍待核实，未打包；计算见 [费用与通勤算法](../decision-math.md)。', '',
+             '| 资料 | 内置小节 |', '| --- | --- |']
+    for name, ids in RENT_SECTIONS.items():
+        text = (ROOT / name).read_text(encoding='utf-8')
+        blocks = {}
+        matches = list(re.finditer(r'^<a id="(s\d+-\d+)"></a>\s*$', text, re.M))
+        for i, match in enumerate(matches):
+            end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
+            blocks[match.group(1)] = text[match.start():end].split('\n---\n', 1)[0].strip()
+        missing = set(ids) - blocks.keys()
+        if missing:
+            raise ValueError(f'{name} 缺少摘录锚点：{sorted(missing)}')
+        title = text.splitlines()[0]
+        license_note = next((line for line in text.splitlines() if line.startswith('> 许可：')), '> 许可：CC BY-NC-SA 4.0。')
+        body = '\n\n'.join(repo_links(blocks[anchor], name) for anchor in ids)
+        header = f'{title}\n\n{license_note}\n\n> 作者：{manifest["author"]}。按原章节摘录；经验价格、法律简化表述和历史政策需另核。\n\n'
+        result['references/guide/' + name] = header + body + '\n'
+        index.append(f'| [{title.lstrip("# ")}]({name}) | {"、".join(anchor[1:].replace("-", ".") for anchor in ids)} |')
+    extra_paths = ['docs/待核实清单.md', 'docs/版权与使用说明.md', 'docs/2026-11-16-读者反馈修订.md']
+    for name in extra_paths:
+        result['references/guide/' + name] = repo_links((ROOT / name).read_text(encoding='utf-8'), name)
+    result['references/guide/LICENSE'] = (ROOT / 'LICENSE').read_text(encoding='utf-8')
+    index.extend(['', '北上广深分别读 9.1、10.1–10.2、11.1、12.1；短期求职过渡另读 12.2。',
+                  '交通报价读 3.1–3.3；水电宽带读 4.2–4.3；租金扣除读 8.1–8.2。政策当前有效性须另查官方文件。', '',
+                  '[待核实清单](docs/待核实清单.md) · [修订记录](docs/2026-11-16-读者反馈修订.md)', '',
+                  '[来源与哈希](source.json) · [混合许可](LICENSE) · [版权说明](docs/版权与使用说明.md)', ''])
+    result['references/guide/目录.md'] = '\n'.join(index)
+    paths = list(RENT_SECTIONS) + extra_paths + ['LICENSE']
+    source = {'author': manifest['author'], 'repository': REPO_URL.removesuffix('blob/main/'),
+              'source_version': manifest['source_version'], 'content_revision': manifest.get('content_revision'),
+              'note': '租房相关小节摘录；未随包包含原始 PDF，不代表现行政策已核实。',
+              'sections': RENT_SECTIONS,
+              'sources': {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in paths}}
+    result['references/guide/source.json'] = json.dumps(source, ensure_ascii=False, indent=2) + '\n'
+    return result
+
+
+def bundles():
+    return [(SKILL, 'references', bundle()), (RENT_SKILL, 'references/guide', rent_bundle())]
+
+
+def stale_files(skill, generated_root, files):
+    stale = [name for name, text in files.items() if not (skill / name).is_file() or (skill / name).read_text(encoding='utf-8') != text]
+    extra = sorted(p.relative_to(skill).as_posix() for p in (skill / generated_root).rglob('*')
+                   if p.is_file() and p.relative_to(skill).as_posix() not in files)
+    return stale + extra
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check', action='store_true')
     args = parser.parse_args()
-    files = bundle()
-    if args.check:
-        stale = [name for name, text in files.items() if not (SKILL / name).is_file() or (SKILL / name).read_text(encoding='utf-8') != text]
-        extra = sorted(p.relative_to(SKILL).as_posix() for p in (SKILL / 'references').rglob('*') if p.is_file() and p.relative_to(SKILL).as_posix() not in files)
-        if stale or extra:
-            raise SystemExit('Skill 资料未同步，请运行 python3 tools/build_skill.py：\n' + '\n'.join(stale + extra))
-        print('Skill 内置资料与维护源一致。')
-    else:
-        # Clean only generated reference files that no longer have a maintained source.
-        for path in (SKILL / 'references').rglob('*'):
-            if path.is_file() and path.relative_to(SKILL).as_posix() not in files:
-                path.unlink()
-        for name, text in files.items():
-            path = SKILL / name
-            path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(text, encoding='utf-8')
-        print(f'已同步 {len(files)} 份 Skill 资料，安装时复制整个 skills/save-money-guide 目录即可。')
+    for skill, generated_root, files in bundles():
+        if args.check:
+            stale = stale_files(skill, generated_root, files)
+            if stale:
+                raise SystemExit(f'{skill.name} 资料未同步，请运行 python3 tools/build_skill.py：\n' + '\n'.join(stale))
+            print(f'{skill.name} 内置资料与维护源一致。')
+        else:
+            # Only the generated subtree is owned by this builder.
+            for path in (skill / generated_root).rglob('*'):
+                if path.is_file() and path.relative_to(skill).as_posix() not in files:
+                    path.unlink()
+            for name, text in files.items():
+                path = skill / name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(text, encoding='utf-8')
+            print(f'{skill.name}：已同步 {len(files)} 份资料，安装时复制整个 skills/{skill.name} 目录即可。')
 
 
 if __name__ == '__main__':

@@ -4,6 +4,8 @@
 
 入口为 [skills/save-money-guide/SKILL.md](../skills/save-money-guide/SKILL.md)。目录内包含完整 Markdown 资料、附录与待核实清单，可以离线查询，不依赖本仓库的原始路径或在线下载。
 
+如果只想处理选房、租约和议价，也可以独立安装 [租房决策官 rent-decision-coach](使用租房决策官Skill.md)。
+
 ## 安装
 
 先下载或克隆本仓库。下面的命令均在仓库根目录运行；**复制整个文件夹，不能只复制 SKILL.md**。如目标目录已有同名 Skill，先检查或备份已有内容。
