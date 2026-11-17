@@ -38,7 +38,8 @@ class SkillBundleTests(unittest.TestCase):
     def test_packages_resolve_local_links_after_copy(self):
         for source_skill, build in ((BUILDER.INCOME_SKILL, BUILDER.income_bundle),
                                     (BUILDER.DISPUTE_SKILL, BUILDER.dispute_bundle),
-                                    (BUILDER.CALENDAR_SKILL, BUILDER.calendar_bundle)):
+                                    (BUILDER.CALENDAR_SKILL, BUILDER.calendar_bundle),
+                                    (BUILDER.WRITER_SKILL, BUILDER.writer_bundle)):
             files = build()
             # Copy maintained instructions too, so missing bundled references are visible.
             for path in source_skill.rglob('*.md'):
@@ -66,7 +67,7 @@ class SkillBundleTests(unittest.TestCase):
                                 self.assertIn(unquote(parts.fragment), DOCUMENT_CHECK.anchors(target))
 
     def test_metadata_hashes_refer_to_maintained_sources(self):
-        for build in (BUILDER.income_bundle, BUILDER.dispute_bundle, BUILDER.calendar_bundle):
+        for build in (BUILDER.income_bundle, BUILDER.dispute_bundle, BUILDER.calendar_bundle, BUILDER.writer_bundle):
             result = build()
             metadata = json.loads(result['references/guide/source.json'])
             self.assertIn('book/08-制度性收入.md', metadata['sources'])

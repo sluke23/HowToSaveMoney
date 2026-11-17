@@ -172,6 +172,28 @@ mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills" && cp -R skills/savings-calendar "
 
 [安装与月度安排示例](docs/使用省钱节律管家Skill.md) · [查看 Skill](skills/savings-calendar/SKILL.md)
 
+## 成本结构说明书写作器：给其他主题写同款说明书
+
+**把本书的写作方法带到你的主题：`cost-guide-writer`。**
+
+围绕读者要做的决定组织内容，拆开金钱、时间、资金占用和风险，给同口径比较、可复算示例、适用条件、依据与行动步骤。可写新稿、搭目录或修订旧稿；例如“家里要不要买打印机”，会解释使用量如何改变购机与按页打印的成本，而不是只列一张推荐清单。
+
+在仓库根目录按所用工具安装：
+
+```bash
+# Claude Code
+mkdir -p "$HOME/.claude/skills" && cp -R skills/cost-guide-writer "$HOME/.claude/skills/"
+```
+
+```bash
+# Codex
+mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills" && cp -R skills/cost-guide-writer "${CODEX_HOME:-$HOME/.codex}/skills/"
+```
+
+打开新会话，用 `/cost-guide-writer`（Claude Code）或 `$cost-guide-writer`（Codex）调用。可独立安装，内置体例样本与完整写作示范；新主题事实需使用对应资料核实。
+
+[安装与写作示例](docs/使用成本结构说明书写作器Skill.md) · [查看 Skill](skills/cost-guide-writer/SKILL.md)
+
 ## 也可以直接读指南
 
 [开始阅读](book/00-这本书怎么用.md) · [按问题查阅](#按问题查阅) · [静态阅读页](index.html) · [EPUB / PDF 等阅读格式](tools/README.md) · [参与完善](CONTRIBUTING.md)

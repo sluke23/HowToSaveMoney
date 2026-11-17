@@ -15,6 +15,7 @@ INCOME_SKILL = ROOT / 'skills/hidden-income-checker'
 LOAN_SKILL = ROOT / 'skills/loan-cost-xray'
 DISPUTE_SKILL = ROOT / 'skills/dispute-router'
 CALENDAR_SKILL = ROOT / 'skills/savings-calendar'
+WRITER_SKILL = ROOT / 'skills/cost-guide-writer'
 REPO_URL = 'https://github.com/sluke23/HowToSaveMoney/blob/main/'
 RENT_SECTIONS = {
     'book/01-住处.md': ['s1-2', 's1-3', 's1-4', 's1-5', 's1-6', 's1-7'],
@@ -55,6 +56,15 @@ CALENDAR_SECTIONS = {
     'book/13-防守.md': ['s13-2'],
 }
 CALENDAR_DOCUMENTS = ('docs/附录A-一年省钱日历.md',)
+WRITER_SECTIONS = {
+    'book/00-这本书怎么用.md': ['s0-2', 's0-3'],
+    'book/01-住处.md': ['s1-5'],
+    'book/04-水电气网与话费.md': ['s4-2', 's4-5'],
+    'book/06-购物.md': ['s6-6'],
+    'book/08-制度性收入.md': ['s8-2'],
+    'book/13-防守.md': ['s13-2', 's13-3'],
+}
+WRITER_DOCUMENTS = ('CONTRIBUTING.md',)
 
 
 def bundle():
@@ -149,7 +159,7 @@ def excerpt_bundle(sections, index_title, intro, reading_notes, source_note, ful
         index.append(f'| [{title.lstrip("# ")}]({name}) | {"、".join(anchor[1:].replace("-", ".") for anchor in ids)} |')
     for name in full_documents:
         text = (ROOT / name).read_text(encoding='utf-8')
-        # Whole appendices retain their own license notice and are independently cited.
+        # Complete documents retain any license notice and are independently cited.
         title = text.splitlines()[0].lstrip('# ')
         result['references/guide/' + name] = repo_links(text, name, sections, full_documents)
         index.append(f'| [{title}]({name}) | 全文 |')
@@ -224,13 +234,26 @@ def calendar_bundle():
         full_documents=CALENDAR_DOCUMENTS)
 
 
+def writer_bundle():
+    return excerpt_bundle(
+        WRITER_SECTIONS, '成本结构写作体例样本目录',
+        ['先读 [写作体例与迁移方法](../writing-method.md) 与 [成本与依据纪律](../cost-and-evidence.md)；',
+         '跨主题成稿演示见 [家庭打印示例](../worked-example.md)。'],
+        ['这些摘录展示读者决策、关联成本、使用期、回本、条件化算例及核查修订，不提供新主题的当前事实依据。',
+         '原书 1.1 的待核实公式未纳入；其他经验、金额、法律或政策简化也不应直接照搬。',
+         '贡献方法全文用于观察维护与核查方式，文中的仓库路径与构建操作不是每个新主题的强制输出结构。'],
+        '写作体例与修订样本；用于提炼方法，不为其他主题的价格、效果、政策或操作提供事实背书。',
+        full_documents=WRITER_DOCUMENTS)
+
+
 def bundles():
     return [(SKILL, 'references', bundle()),
             (RENT_SKILL, 'references/guide', rent_bundle()),
             (INCOME_SKILL, 'references/guide', income_bundle()),
             (LOAN_SKILL, 'references/guide', loan_bundle()),
             (DISPUTE_SKILL, 'references/guide', dispute_bundle()),
-            (CALENDAR_SKILL, 'references/guide', calendar_bundle())]
+            (CALENDAR_SKILL, 'references/guide', calendar_bundle()),
+            (WRITER_SKILL, 'references/guide', writer_bundle())]
 
 
 def stale_files(skill, generated_root, files):

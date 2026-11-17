@@ -1,0 +1,4 @@
+interface:
+  display_name: "成本结构说明书写作器"
+  short_description: "把任意主题写成有适用条件、总成本比较、可复算示例和行动步骤的说明书"
+  default_prompt: "使用 $cost-guide-writer，把我的主题和材料写成成本结构说明书：明确读者决策，拆解成本，给出条件化比较、可复算示例、依据及第一步，并标明待核实项。"
