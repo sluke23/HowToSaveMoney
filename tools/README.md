@@ -91,7 +91,7 @@ PDF 排版变更后还应渲染检查封面、目录、密集表格、长链接�
 python tools/build_site.py
 python tools/build_site.py --check
 
-# 同步五个 Skill 的离线资料
+# 同步六个 Skill 的离线资料
 python tools/build_skill.py
 python tools/build_skill.py --check
 
@@ -99,7 +99,7 @@ python tools/build_skill.py --check
 python -m unittest discover -s tools/tests
 ```
 
-`build_skill.py` 为 `save-money-guide` 打包完整指南，为 `rent-decision-coach` 摘录租房资料，为 `hidden-income-checker` 摘录补贴与待遇线索，为 `loan-cost-xray` 摘录借贷成本方法，为 `dispute-router` 摘录租赁、消费、账单与维权资料；摘录均附待核实清单及来源哈希，`tools/check.py` 同时检查五个 Skill。专题 Skill 的人工维护方法文件放在自动生成子目录 `references/guide/` 之外，重建时会保留。使用说明见[租房决策官](../docs/使用租房决策官Skill.md)、[隐性收入申领对照器](../docs/使用隐性收入申领对照器Skill.md)、[借贷成本透视器](../docs/使用借贷成本透视器Skill.md)与[维权分诊台](../docs/使用维权分诊台Skill.md)。
+`build_skill.py` 为 `save-money-guide` 打包完整指南，为 `rent-decision-coach` 摘录租房资料，为 `hidden-income-checker` 摘录补贴与待遇线索，为 `loan-cost-xray` 摘录借贷成本方法，为 `dispute-router` 摘录租赁、消费、账单与维权资料，为 `savings-calendar` 打包附录 A 全文及租约、续费与办理时点相关小节；摘录均附待核实清单及来源哈希，`tools/check.py` 同时检查六个 Skill。专题 Skill 的人工维护方法文件放在自动生成子目录 `references/guide/` 之外，重建时会保留。使用说明见[租房决策官](../docs/使用租房决策官Skill.md)、[隐性收入申领对照器](../docs/使用隐性收入申领对照器Skill.md)、[借贷成本透视器](../docs/使用借贷成本透视器Skill.md)、[维权分诊台](../docs/使用维权分诊台Skill.md)与[省钱节律管家](../docs/使用省钱节律管家Skill.md)。
 
 `index.html` 是项目网站；`dist/HowToSaveMoney.html` 是无仓库文件依赖的完整单文件阅读版，适合独立分发。
 

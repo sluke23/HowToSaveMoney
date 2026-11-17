@@ -150,6 +150,28 @@ mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills" && cp -R skills/dispute-router "${
 
 [安装与四个提问示例](docs/使用维权分诊台Skill.md) · [查看 Skill](skills/dispute-router/SKILL.md)
 
+## 省钱节律管家：本月该动手做什么
+
+**把续费、租约和办理窗口放进自己的日程：`savings-calendar`。**
+
+告诉它年月、城市、个人到期事项和可用时间，列出本月优先行动、第一步、完成凭据及回查节点。例如租约明年 1 月到期，本月可能就该查通知条款、比较房源；补贴窗口尚不明确，就先查本地当年公告。真实截止日、个人到期日和建议检查日分别标明，没有购物需求就不安排大促任务。
+
+在仓库根目录按所用工具安装：
+
+```bash
+# Claude Code
+mkdir -p "$HOME/.claude/skills" && cp -R skills/savings-calendar "$HOME/.claude/skills/"
+```
+
+```bash
+# Codex
+mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills" && cp -R skills/savings-calendar "${CODEX_HOME:-$HOME/.codex}/skills/"
+```
+
+打开新会话，用 `/savings-calendar`（Claude Code）或 `$savings-calendar`（Codex）调用。可独立安装；内置年度日历及相关资料，计划本身不会自动发送提醒。
+
+[安装与月度安排示例](docs/使用省钱节律管家Skill.md) · [查看 Skill](skills/savings-calendar/SKILL.md)
+
 ## 也可以直接读指南
 
 [开始阅读](book/00-这本书怎么用.md) · [按问题查阅](#按问题查阅) · [静态阅读页](index.html) · [EPUB / PDF 等阅读格式](tools/README.md) · [参与完善](CONTRIBUTING.md)

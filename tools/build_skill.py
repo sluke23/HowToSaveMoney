@@ -14,6 +14,7 @@ RENT_SKILL = ROOT / 'skills/rent-decision-coach'
 INCOME_SKILL = ROOT / 'skills/hidden-income-checker'
 LOAN_SKILL = ROOT / 'skills/loan-cost-xray'
 DISPUTE_SKILL = ROOT / 'skills/dispute-router'
+CALENDAR_SKILL = ROOT / 'skills/savings-calendar'
 REPO_URL = 'https://github.com/sluke23/HowToSaveMoney/blob/main/'
 RENT_SECTIONS = {
     'book/01-住处.md': ['s1-2', 's1-3', 's1-4', 's1-5', 's1-6', 's1-7'],
@@ -46,6 +47,14 @@ DISPUTE_SECTIONS = {
     'book/08-制度性收入.md': ['s8-4'],
     'book/13-防守.md': ['s13-1', 's13-2', 's13-3', 's13-4', 's13-5', 's13-6'],
 }
+CALENDAR_SECTIONS = {
+    'book/01-住处.md': ['s1-4', 's1-5'],
+    'book/04-水电气网与话费.md': ['s4-1', 's4-2', 's4-4'],
+    'book/06-购物.md': ['s6-4', 's6-5', 's6-6'],
+    'book/08-制度性收入.md': ['s8-1', 's8-2', 's8-3', 's8-4', 's8-5', 's8-6'],
+    'book/13-防守.md': ['s13-2'],
+}
+CALENDAR_DOCUMENTS = ('docs/附录A-一年省钱日历.md',)
 
 
 def bundle():
@@ -92,7 +101,7 @@ def bundle():
     return result
 
 
-def repo_links(text, source_path, sections):
+def repo_links(text, source_path, sections, full_documents=()):
     """Keep omitted cross-references usable without depending on a checkout."""
     def replace(match):
         label, href = match.groups()
@@ -101,7 +110,7 @@ def repo_links(text, source_path, sections):
             return match.group(0)
         target = posixpath.normpath(posixpath.join(posixpath.dirname(source_path), unquote(parts.path))) if parts.path else source_path
         bundled = target in sections and (not parts.fragment or parts.fragment in sections[target])
-        bundled = bundled or target in {'docs/待核实清单.md', 'docs/版权与使用说明.md', 'docs/2026-11-16-读者反馈修订.md', 'LICENSE'}
+        bundled = bundled or target in full_documents or target in {'docs/待核实清单.md', 'docs/版权与使用说明.md', 'docs/2026-11-16-读者反馈修订.md', 'LICENSE'}
         if bundled:
             href = posixpath.relpath(target, posixpath.dirname(source_path))
             if parts.fragment:
@@ -114,7 +123,7 @@ def repo_links(text, source_path, sections):
     return re.sub(r'\[([^\]\n]*)\]\(([^\n]+?)\)', replace, text)
 
 
-def excerpt_bundle(sections, index_title, intro, reading_notes, source_note):
+def excerpt_bundle(sections, index_title, intro, reading_notes, source_note, full_documents=()):
     """Extract selected sections with links scoped to this standalone package."""
     manifest = json.loads((ROOT / 'docs/内容映射.json').read_text(encoding='utf-8'))
     result = {}
@@ -134,24 +143,32 @@ def excerpt_bundle(sections, index_title, intro, reading_notes, source_note):
             raise ValueError(f'{name} 缺少摘录锚点：{sorted(missing)}')
         title = text.splitlines()[0]
         license_note = next((line for line in text.splitlines() if line.startswith('> 许可：')), '> 许可：CC BY-NC-SA 4.0。')
-        body = '\n\n'.join(repo_links(blocks[anchor], name, sections) for anchor in ids)
+        body = '\n\n'.join(repo_links(blocks[anchor], name, sections, full_documents) for anchor in ids)
         header = f'{title}\n\n{license_note}\n\n> 作者：{manifest["author"]}。按原章节摘录；经验价格、法律简化表述和历史政策需另核。\n\n'
         result['references/guide/' + name] = header + body + '\n'
         index.append(f'| [{title.lstrip("# ")}]({name}) | {"、".join(anchor[1:].replace("-", ".") for anchor in ids)} |')
+    for name in full_documents:
+        text = (ROOT / name).read_text(encoding='utf-8')
+        # Whole appendices retain their own license notice and are independently cited.
+        title = text.splitlines()[0].lstrip('# ')
+        result['references/guide/' + name] = repo_links(text, name, sections, full_documents)
+        index.append(f'| [{title}]({name}) | 全文 |')
     extra_paths = ['docs/待核实清单.md', 'docs/版权与使用说明.md', 'docs/2026-11-16-读者反馈修订.md']
     for name in extra_paths:
-        result['references/guide/' + name] = repo_links((ROOT / name).read_text(encoding='utf-8'), name, sections)
+        result['references/guide/' + name] = repo_links((ROOT / name).read_text(encoding='utf-8'), name, sections, full_documents)
     result['references/guide/LICENSE'] = (ROOT / 'LICENSE').read_text(encoding='utf-8')
     index.extend(['', *reading_notes, '',
                   '[待核实清单](docs/待核实清单.md) · [修订记录](docs/2026-11-16-读者反馈修订.md)', '',
                   '[来源与哈希](source.json) · [混合许可](LICENSE) · [版权说明](docs/版权与使用说明.md)', ''])
     result['references/guide/目录.md'] = '\n'.join(index)
-    paths = list(sections) + extra_paths + ['LICENSE']
+    paths = list(sections) + list(full_documents) + extra_paths + ['LICENSE']
     source = {'author': manifest['author'], 'repository': REPO_URL.removesuffix('blob/main/'),
               'source_version': manifest['source_version'], 'content_revision': manifest.get('content_revision'),
               'note': source_note,
               'sections': sections,
               'sources': {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in paths}}
+    if full_documents:
+        source['full_documents'] = list(full_documents)
     result['references/guide/source.json'] = json.dumps(source, ensure_ascii=False, indent=2) + '\n'
     return result
 
@@ -196,12 +213,24 @@ def dispute_bundle():
         '维权相关小节摘录；保留原文不等于认可其法律简化表述，受理、证据及期限另核适用官方规则。')
 
 
+def calendar_bundle():
+    return excerpt_bundle(
+        CALENDAR_SECTIONS, '月度省钱行动资料目录',
+        ['先按 [节律与事项对照](../rhythm-map.md) 选任务，再按 [时点核对与复盘](../deadlines-and-review.md) 排个人日程。'],
+        ['附录 A 的月份是检查线索，不证明当前政策窗口或商户最低价；医保年度、参保期和其他规则按地区与身份另核。',
+         '1.4–1.5 查合同与续租准备；4.1–4.2/4.4 查套餐、优惠和订阅到期；6.4–6.6 查原计划消费与会员。',
+         '8.1–8.6 查扣除、汇算、账户及待遇线索，13.2 查预付条款；不把历史金额、经验时限和简化合同表述当成现行个人规则。'],
+        '年度日历全文及月度行动相关摘录；日历月份不是统一截止日，个人时点与现行窗口须分别核对。',
+        full_documents=CALENDAR_DOCUMENTS)
+
+
 def bundles():
     return [(SKILL, 'references', bundle()),
             (RENT_SKILL, 'references/guide', rent_bundle()),
             (INCOME_SKILL, 'references/guide', income_bundle()),
             (LOAN_SKILL, 'references/guide', loan_bundle()),
-            (DISPUTE_SKILL, 'references/guide', dispute_bundle())]
+            (DISPUTE_SKILL, 'references/guide', dispute_bundle()),
+            (CALENDAR_SKILL, 'references/guide', calendar_bundle())]
 
 
 def stale_files(skill, generated_root, files):

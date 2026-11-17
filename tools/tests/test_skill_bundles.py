@@ -29,10 +29,16 @@ class SkillBundleTests(unittest.TestCase):
         self.assertTrue(rent.endswith('#s8-3)'))
         external = '[官方原文](https://example.gov.cn/policy?id=8#rule)'
         self.assertEqual(BUILDER.repo_links(external, source, BUILDER.INCOME_SECTIONS), external)
+        # A complete appendix is local only in packages that include that document.
+        appendix = '[日历](../docs/附录A-一年省钱日历.md)'
+        local = BUILDER.repo_links(appendix, source, BUILDER.CALENDAR_SECTIONS, BUILDER.CALENDAR_DOCUMENTS)
+        self.assertEqual(local, appendix)
+        self.assertIn('https://github.com/', BUILDER.repo_links(appendix, source, BUILDER.INCOME_SECTIONS))
 
     def test_packages_resolve_local_links_after_copy(self):
         for source_skill, build in ((BUILDER.INCOME_SKILL, BUILDER.income_bundle),
-                                    (BUILDER.DISPUTE_SKILL, BUILDER.dispute_bundle)):
+                                    (BUILDER.DISPUTE_SKILL, BUILDER.dispute_bundle),
+                                    (BUILDER.CALENDAR_SKILL, BUILDER.calendar_bundle)):
             files = build()
             # Copy maintained instructions too, so missing bundled references are visible.
             for path in source_skill.rglob('*.md'):
@@ -60,13 +66,17 @@ class SkillBundleTests(unittest.TestCase):
                                 self.assertIn(unquote(parts.fragment), DOCUMENT_CHECK.anchors(target))
 
     def test_metadata_hashes_refer_to_maintained_sources(self):
-        for build in (BUILDER.income_bundle, BUILDER.dispute_bundle):
+        for build in (BUILDER.income_bundle, BUILDER.dispute_bundle, BUILDER.calendar_bundle):
             result = build()
             metadata = json.loads(result['references/guide/source.json'])
             self.assertIn('book/08-制度性收入.md', metadata['sources'])
             for path, expected in metadata['sources'].items():
                 with self.subTest(package=build.__name__, path=path):
                     self.assertEqual(hashlib.sha256((ROOT / path).read_bytes()).hexdigest(), expected)
+            for path in metadata.get('full_documents', []):
+                with self.subTest(package=build.__name__, document=path):
+                    self.assertIn(path, metadata['sources'])
+                    self.assertIn('references/guide/' + path, result)
 
     def test_loan_package_preserves_source_and_omits_unverified_mortgage_policy(self):
         result = BUILDER.loan_bundle()

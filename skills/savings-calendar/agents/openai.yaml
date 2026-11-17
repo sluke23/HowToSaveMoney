@@ -1,0 +1,4 @@
+interface:
+  display_name: "省钱节律管家"
+  short_description: "按城市、年月和个人到期事项安排本月行动，倒排准备、办理与回查时点"
+  default_prompt: "使用 $savings-calendar，根据我的城市、个人到期事项和可用时间，安排本月优先做的省钱行动，区分真实截止日、建议检查日和待核实窗口，并列出下一步及回查时间。"
